@@ -6,10 +6,6 @@ export function Exercise() {
   function undefinedReturn() { }
   let b = null;
 
-  const singleQuote = 'Tekst przy użyciu pojedynczego apostrofu';
-  const doubleQuote = 'Tekst przy użyciu podwójnego apostrofu';
-  const templateString = `Tekst przy tylnego apostrofu`;
-
   return (
     <>
       <h2>Puste wartości i komentarze</h2>
