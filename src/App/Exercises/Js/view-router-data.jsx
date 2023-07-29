@@ -11,6 +11,7 @@ import { blockRouterMetaData as String } from './String/router-data';
 import { ArraysMetaData } from './JSArraysBasics/router-data';
 import { ArraysExerciseRouterMetaData } from './JSArraysExercise/router-data';
 import { StringAsArrayMetaData } from './JSStringsASArrays/router-data';
+import { HoistingMetaData } from './Hoisting/router-data';
 
 export const blockRouterMetaData = [
   blockRouterMetaDataJsVariables1,
@@ -24,5 +25,6 @@ export const blockRouterMetaData = [
   ArraysMetaData,
   ArraysExerciseRouterMetaData,
   StringAsArrayMetaData,
+  HoistingMetaData,
 ];
 export const blockRouterData = getParsedRouterDataList(blockRouterMetaData);
