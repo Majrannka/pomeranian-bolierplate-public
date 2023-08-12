@@ -20,7 +20,6 @@ export const MoleGame = () => {
   const [duration, setDuration] = useState();
   const [molesNo, setMolesNo] = useState();
   const [tiles, setTiles] = useState([]);
-  const [timeVisible, setTimeVisible] = useState();
   const [status, setStatus] = useState('non-started');
   const [timeLeft, setTimeLeft] = useState();
   const [score, setScore] = useState();
@@ -33,23 +32,16 @@ export const MoleGame = () => {
     }
     if (status === 'started') {
       setTimeLeft(duration)
-      setTiles(getInitialTiles());
+      setTiles(setInitialTiles(molesNo));
     }
     if (status !== 'finished') {
       setScore(0)
     }
-  }, [status, duration])
+  }, [status, duration, molesNo])
 
   function setInitialTiles(molesNo) {
-    matrix = []
-    for (let i = 0; i < molesNo + 2; i++) {
-      row = []
-      for (let i = 0; i < 5; i++) {
-        row.push(<Tile variant={'neutral'} />)
-      }
-      matrix.push(row)
-    }
-    setTiles(matrix)
+    const tiles = MOLES.find((mole) => mole.molesNo === molesNo).tiles
+    return Array(tiles).fill(0).map((tile, index) => ({ index }))
   }
 
   function formatTime(time) {
@@ -83,7 +75,8 @@ export const MoleGame = () => {
         <b>duration:</b> {duration}<br />
         <b>molesNo:</b> {molesNo}<br />
         <b>status:</b> {status}<br />
-        <b>timeLeft:</b> {timeLeft}
+        <b>timeLeft:</b> {timeLeft}<br />
+        <b>board:</b> {JSON.stringify(tiles)}
       </p>
       {status !== 'started' &&
         <div>
@@ -144,12 +137,15 @@ export const MoleGame = () => {
           </div>
         </div>
       }
-      <div className='board'>
-        <Tile variant={'neutral'} />
-        <Tile variant={'correct'} />
-        <Tile variant={'not-correct'} />
-        <Tile hasMole variant={'neutral'} />
-      </div>
+      {status === 'started' &&
+        <div className='board'>
+          {tiles.map((index) => <Tile key={index} variant={'neutral'} />)}
+          {/* <br />
+          <Tile variant={'neutral'} />
+          <Tile variant={'correct'} />
+          <Tile variant={'not-correct'} />
+          <Tile hasMole variant={'neutral'} /> */}
+        </div>}
     </>
   );
 };
