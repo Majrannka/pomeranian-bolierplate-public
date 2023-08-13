@@ -2,13 +2,13 @@
 import './styles.css';
 import { Label, Button, Output, Result, Tile } from './Components/index';
 import { useState, useEffect } from 'react'
+import { formatTime } from './Utils';
 
-
-const MINUTE = 60000; //milisekundy
+const MINUTE = 6000; //milisekundy
 const DURATION = [
-  { label: '1 minuta', duration: MINUTE },
-  { label: '2 minuty', duration: 2 * MINUTE },
-  { label: '3 minuty', duration: 3 * MINUTE },
+  { label: '1 minuta', duration: MINUTE + 100 },
+  { label: '2 minuty', duration: 2 * MINUTE + 100 },
+  { label: '3 minuty', duration: 3 * MINUTE + 100 },
 ];
 const MOLES = [
   { label: '1 kret', molesNo: 1, tiles: 10, timeVisible: 1000 },
@@ -18,46 +18,49 @@ const MOLES = [
 
 export const MoleGame = () => {
   const [duration, setDuration] = useState();
-  const [molesNo, setMolesNo] = useState();
+  const [previousDuration, setPreviousDuration] = useState();
+  const [molesOption, setMolesOption] = useState();
   const [tiles, setTiles] = useState([]);
   const [status, setStatus] = useState('non-started');
   const [timeLeft, setTimeLeft] = useState();
   const [score, setScore] = useState();
   const [showWarning, setShowWarning] = useState(false);
+  const [remainingTime, setRemainingTime] = useState()
 
   useEffect(() => {
-    console.log("Status się zmienił ", status)
-    if (status === 'non-started') {
-      setTimeLeft(0);
+    if (timeLeft <= 0) {
+      clearInterval(remainingTime)
+      setStatus('finished')
+      setPreviousDuration(duration);
+      setDuration(undefined);
+      setMolesOption(undefined);
     }
-    if (status === 'started') {
-      setTimeLeft(duration)
-      setTiles(setInitialTiles(molesNo));
-    }
-    if (status !== 'finished') {
-      setScore(0)
-    }
-  }, [status, duration, molesNo])
+  }, [remainingTime, timeLeft])
 
-  function setInitialTiles(molesNo) {
-    const tiles = MOLES.find((mole) => mole.molesNo === molesNo).tiles
-    return Array(tiles).fill(0).map((tile, index) => ({ index }))
+  function startCountDown() {
+    const remianing = setInterval(() => setTimeLeft((previous) => previous - 1000), 1000)
+    setRemainingTime(remianing);
   }
 
-  function formatTime(time) {
-    const timeInSeconds = time / 1000;
-    const minutes = Math.floor(timeInSeconds / 60).toString().padStart(2, '0');
-    const seconds = (timeInSeconds % 60).toString().padStart(2, '0');
-    return `${minutes}:${seconds}`
+  function setInitialTiles(molesOption) {
+    return Array(molesOption.tiles).fill(0).map((tile, index) => ({ index }))
   }
 
   function handleStart() {
-    if (duration > 0 && molesNo > 0) {
+    if (duration && molesOption) {
       setShowWarning(false);
+      setScore(0);
       setStatus('started');
+      setTiles(setInitialTiles(molesOption));
+      setTimeLeft(duration)
+      startCountDown();
     } else {
       setShowWarning(true)
     }
+  }
+
+  function handleGuess(index) {
+
   }
   return (
     <>
@@ -70,10 +73,10 @@ export const MoleGame = () => {
         Brakuje ustawień gry!
       </p>
       }
-      {status === 'finished' && <Result score={score} duration={formatTime(duration)} />}
+      {status === 'finished' && <Result score={score} duration={formatTime(previousDuration)} />}
       <p>
         <b>duration:</b> {duration}<br />
-        <b>molesNo:</b> {molesNo}<br />
+        <b>molesNo:</b> {molesOption && molesOption.molesNo}<br />
         <b>status:</b> {status}<br />
         <b>timeLeft:</b> {timeLeft}<br />
         <b>board:</b> {JSON.stringify(tiles)}
@@ -100,8 +103,8 @@ export const MoleGame = () => {
                 <Button
                   key={item.label}
                   value={item.label}
-                  onClick={() => setMolesNo(item.molesNo)}
-                  variant={item.molesNo !== molesNo ? 'primary' : 'secondary'}
+                  onClick={() => setMolesOption(item)}
+                  variant={(!molesOption || item.molesNo !== molesOption.molesNo) ? 'primary' : 'secondary'}
                 />
               ))}
             </div>
@@ -139,7 +142,7 @@ export const MoleGame = () => {
       }
       {status === 'started' &&
         <div className='board'>
-          {tiles.map((index) => <Tile key={index} variant={'neutral'} />)}
+          {tiles.map((index) => <Tile key={index} variant={'neutral'} onClick={() => handleGuess(index)} />)}
           {/* <br />
           <Tile variant={'neutral'} />
           <Tile variant={'correct'} />
