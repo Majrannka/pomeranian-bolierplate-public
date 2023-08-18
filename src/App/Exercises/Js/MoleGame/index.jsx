@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react'
 import { formatTime } from './Utils';
 
 const MINUTE = 6000; //milisekundy
+const HIGHLIGHT_TIME = 500;
+
 const DURATION = [
   { label: '1 minuta', duration: MINUTE + 100 },
   { label: '2 minuty', duration: 2 * MINUTE + 100 },
@@ -25,7 +27,10 @@ export const MoleGame = () => {
   const [timeLeft, setTimeLeft] = useState();
   const [score, setScore] = useState();
   const [showWarning, setShowWarning] = useState(false);
-  const [remainingTime, setRemainingTime] = useState()
+  const [remainingTime, setRemainingTime] = useState();
+  const [molePosition, setMolePosition] = useState();
+  const [correct, setCorrect] = useState();
+  const [incorrect, setIncorrect] = useState();
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -36,6 +41,15 @@ export const MoleGame = () => {
       setMolesOption(undefined);
     }
   }, [remainingTime, timeLeft])
+
+  useEffect(() => {
+    let timeoutId;
+    if (correct != undefined || incorrect != undefined) {
+      timeoutId = setTimeout(() => setCorrect(undefined), HIGHLIGHT_TIME);
+      timeoutId = setTimeout(() => setIncorrect(undefined), HIGHLIGHT_TIME)
+    }
+    return () => clearTimeout(timeoutId);
+  }, [correct, incorrect]);
 
   function startCountDown() {
     const remianing = setInterval(() => setTimeLeft((previous) => previous - 1000), 1000)
@@ -50,18 +64,34 @@ export const MoleGame = () => {
     if (duration && molesOption) {
       setShowWarning(false);
       setScore(0);
+      setMolePosition(3);
       setStatus('started');
       setTiles(setInitialTiles(molesOption));
       setTimeLeft(duration)
       startCountDown();
+
     } else {
       setShowWarning(true)
     }
   }
 
   function handleGuess(index) {
-
+    if (molePosition === index) {
+      setCorrect(index)
+      setScore((previousScore) => previousScore + 1)
+      setMolePosition(6)
+    } else {
+      setIncorrect(index)
+      setScore((previousScore) => previousScore - 1)
+    }
   }
+
+  function getTileVariant(index) {
+    if (index === correct) return 'correct';
+    if (index === incorrect) return 'not-correct';
+    return 'neutral'
+  }
+
   return (
     <>
       <h4>&lt;KRET</h4>
@@ -142,7 +172,7 @@ export const MoleGame = () => {
       }
       {status === 'started' &&
         <div className='board'>
-          {tiles.map((index) => <Tile key={index} variant={'neutral'} onClick={() => handleGuess(index)} />)}
+          {tiles.map(({ index }) => <Tile key={index} hasMole={index === molePosition} variant={getTileVariant(index)} onClick={() => handleGuess(index)} />)}
           {/* <br />
           <Tile variant={'neutral'} />
           <Tile variant={'correct'} />

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import './styles.css';
 
-export const Tile = ({ hasMole, variant }) => {
+export const Tile = ({ hasMole, variant, onClick }) => {
     if (
         !(
             variant === 'correct' ||
@@ -16,7 +16,10 @@ export const Tile = ({ hasMole, variant }) => {
     if (hasMole) moleClass = 'tile-has-mole';
 
     return (
-        <button className={`tile tile-${variant} ${moleClass}`} />
+        <button
+            className={`tile tile-${variant} ${moleClass}`}
+            onClick={onClick}
+        />
 
     );
 };
