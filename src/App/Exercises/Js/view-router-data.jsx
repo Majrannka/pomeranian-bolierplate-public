@@ -8,6 +8,13 @@ import { blockRouterMetaData as Numbers } from './Numbers/router-data';
 import { blockRouterMetaData as NumbersBooleanExercise } from './NumbersBooleanExercise/router-data';
 import { blockRouterMetaData as EmptyValuesComments } from './EmptyValuesComments/router-data';
 import { blockRouterMetaData as String } from './String/router-data';
+import { ArraysMetaData } from './JSArraysBasics/router-data';
+import { ArraysExerciseRouterMetaData } from './JSArraysExercise/router-data';
+import { StringAsArrayMetaData } from './JSStringsASArrays/router-data';
+import { HoistingMetaData } from './Hoisting/router-data';
+import { TimerMetaData } from './Timer/router-data';
+import { MoleGameMetaData } from './MoleGame/router-data';
+// import { blockRouterData as Storage } from './JSONXMLStorage/router-data'
 
 export const blockRouterMetaData = [
   blockRouterMetaDataJsVariables1,
@@ -18,5 +25,12 @@ export const blockRouterMetaData = [
   NumbersBooleanExercise,
   EmptyValuesComments,
   String,
+  ArraysMetaData,
+  ArraysExerciseRouterMetaData,
+  StringAsArrayMetaData,
+  HoistingMetaData,
+  TimerMetaData,
+  MoleGameMetaData,
+  // Storage,
 ];
 export const blockRouterData = getParsedRouterDataList(blockRouterMetaData);

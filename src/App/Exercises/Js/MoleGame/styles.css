@@ -1,0 +1,26 @@
+.setting {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 4rem;
+    ;
+}
+
+.buttons {
+    position: absolute;
+    margin-left: 12rem;
+    gap: 24px;
+
+}
+
+.settingWarning {
+    font-weight: bold;
+    color: #fe3756;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    width: min-content;
+}

@@ -1,0 +1,7 @@
+ul li::marker {
+    content: normal;
+}
+
+ul li {
+    text-decoration-line: none;
+}
