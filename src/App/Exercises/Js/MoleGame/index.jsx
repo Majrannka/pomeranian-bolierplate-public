@@ -4,7 +4,7 @@ import { Label, Button, Output, Result, Tile } from './Components/index';
 import { useState, useEffect } from 'react'
 import { formatTime, getNewMolePosition } from './Utils';
 
-const MINUTE = 6000; //milisekundy
+const MINUTE = 60000; //milisekundy
 const HIGHLIGHT_TIME = 500;
 
 const DURATION = [
@@ -23,7 +23,7 @@ export const MoleGame = () => {
   const [previousDuration, setPreviousDuration] = useState();
   const [molesOption, setMolesOption] = useState();
   const [tiles, setTiles] = useState([]);
-  const [status, setStatus] = useState('non-started');
+  const [status, setStatus] = useState('notStarted');
   const [timeLeft, setTimeLeft] = useState();
   const [score, setScore] = useState();
   const [showWarning, setShowWarning] = useState(false);
@@ -51,6 +51,15 @@ export const MoleGame = () => {
     return () => clearTimeout(timeoutId);
   }, [correct, incorrect]);
 
+  useEffect(() => {
+    if (molesOption === undefined) return;
+    let timeoutId;
+    if (molePosition != undefined) {
+      timeoutId = setTimeout(() => setMolePosition(getNewMolePosition(molePosition, molesOption.tiles)), molesOption.timeVisible);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [molePosition, molesOption]);
+
   function startCountDown() {
     const remianing = setInterval(() => setTimeLeft((previous) => previous - 1000), 1000)
     setRemainingTime(remianing);
@@ -75,6 +84,13 @@ export const MoleGame = () => {
     }
   }
 
+  function handleStop() {
+    setStatus('notStarted');
+    clearInterval(remainingTime);
+    setDuration(undefined);
+    setMolesOption(undefined)
+  }
+
   function handleGuess(index) {
     if (molePosition === index) {
       setCorrect(index)
@@ -88,7 +104,7 @@ export const MoleGame = () => {
 
   function getTileVariant(index) {
     if (index === correct) return 'correct';
-    if (index === incorrect) return 'not-correct';
+    if (index === incorrect) return 'incorrect';
     return 'neutral'
   }
 
@@ -96,22 +112,17 @@ export const MoleGame = () => {
   return (
     <>
       <h4>&lt;KRET</h4>
-      <p>
-        Gra polegająca na podążaniu za krecikiem i trafieniu na kwadrat, w
-        którym się pojawił.{' '}
-      </p>
-      {showWarning && <p className='settingWarning'>
-        Brakuje ustawień gry!
-      </p>
-      }
-      {status === 'finished' && <Result score={score} duration={formatTime(previousDuration)} />}
-      <p>
-        <b>duration:</b> {duration}<br />
-        <b>molesNo:</b> {molesOption && molesOption.molesNo}<br />
-        <b>status:</b> {status}<br />
-        <b>timeLeft:</b> {timeLeft}<br />
-        <b>board:</b> {JSON.stringify(tiles)}
-      </p>
+      <div className='communicates'>
+        <p>
+          Gra polegająca na podążaniu za krecikiem i trafieniu na kwadrat, w
+          którym się pojawił.{' '}
+        </p>
+        {showWarning && <p className='settingWarning'>
+          Brakuje ustawień gry!
+        </p>
+        }
+        {status === 'finished' && <Result score={score} duration={formatTime(previousDuration)} />}
+      </div>
       {status !== 'started' &&
         <div>
           <div className="setting">
@@ -166,7 +177,7 @@ export const MoleGame = () => {
           <div className="setting">
             <Label value={'Przyciski sterujące'} />
             <div className='buttons'>
-              <Button value={'Stop'} variant={'tertiary'} onClick={() => setStatus('non-started')} />
+              <Button value={'Stop'} variant={'tertiary'} onClick={handleStop} />
             </div>
           </div>
         </div>
@@ -177,7 +188,7 @@ export const MoleGame = () => {
           {/* <br />
           <Tile variant={'neutral'} />
           <Tile variant={'correct'} />
-          <Tile variant={'not-correct'} />
+          <Tile variant={'incorrect'} />
           <Tile hasMole variant={'neutral'} /> */}
         </div>}
     </>

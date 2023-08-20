@@ -20,7 +20,7 @@ button:hover {
 
 }
 
-.tile-not-correct {
+.tile-incorrect {
     border-radius: 8px;
     background: var(--colors-actions-danger-light, #F3AEA8);
     /* l */
