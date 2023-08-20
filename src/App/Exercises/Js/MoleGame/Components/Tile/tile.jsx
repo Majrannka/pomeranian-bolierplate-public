@@ -5,7 +5,7 @@ export const Tile = ({ hasMole, variant, onClick }) => {
     if (
         !(
             variant === 'correct' ||
-            variant === 'not-correct' ||
+            variant === 'incorrect' ||
             variant === 'neutral'
         )
     ) {
