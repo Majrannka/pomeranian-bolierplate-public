@@ -2,7 +2,7 @@
 import './styles.css';
 import { Label, Button, Output, Result, Tile } from './Components/index';
 import { useState, useEffect } from 'react'
-import { formatTime } from './Utils';
+import { formatTime, getNewMolePosition } from './Utils';
 
 const MINUTE = 6000; //milisekundy
 const HIGHLIGHT_TIME = 500;
@@ -64,7 +64,7 @@ export const MoleGame = () => {
     if (duration && molesOption) {
       setShowWarning(false);
       setScore(0);
-      setMolePosition(3);
+      setMolePosition(getNewMolePosition(molePosition, molesOption.tiles));
       setStatus('started');
       setTiles(setInitialTiles(molesOption));
       setTimeLeft(duration)
@@ -79,7 +79,7 @@ export const MoleGame = () => {
     if (molePosition === index) {
       setCorrect(index)
       setScore((previousScore) => previousScore + 1)
-      setMolePosition(6)
+      setMolePosition(getNewMolePosition(index, molesOption.tiles))
     } else {
       setIncorrect(index)
       setScore((previousScore) => previousScore - 1)
@@ -91,6 +91,7 @@ export const MoleGame = () => {
     if (index === incorrect) return 'not-correct';
     return 'neutral'
   }
+
 
   return (
     <>
