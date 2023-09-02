@@ -1,5 +1,5 @@
 import './styles.css';
 
-export const Label = ({ value }) => {
-    return <span className="label-span"> {value} </span>;
+export const Label = ({ children }) => {
+    return <span className="label-span"> {children} </span>;
 };

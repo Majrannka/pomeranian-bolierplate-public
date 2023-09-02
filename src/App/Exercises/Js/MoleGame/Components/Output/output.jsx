@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import './styles.css';
 
-export const Output = ({ value = 'empty' }) => {
+export const Output = ({ children }) => {
     return (
         <span className='output-span' >
-            {value}
+            {children}
         </span>
     );
 };
