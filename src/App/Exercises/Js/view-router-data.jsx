@@ -14,7 +14,7 @@ import { StringAsArrayMetaData } from './JSStringsASArrays/router-data';
 import { HoistingMetaData } from './Hoisting/router-data';
 import { TimerMetaData } from './Timer/router-data';
 import { MoleGameMetaData } from './MoleGame/router-data';
-// import { blockRouterData as Storage } from './JSONXMLStorage/router-data'
+import { blockRouterMetaData as OOP } from './OOP/router-data';
 
 export const blockRouterMetaData = [
   blockRouterMetaDataJsVariables1,
@@ -31,6 +31,6 @@ export const blockRouterMetaData = [
   HoistingMetaData,
   TimerMetaData,
   MoleGameMetaData,
-  // Storage,
+  OOP,
 ];
 export const blockRouterData = getParsedRouterDataList(blockRouterMetaData);
