@@ -34,16 +34,17 @@ aside li::marker {
   content: none;
 }
 
-
 aside a.active {
   /*
   background-color: var(--color-primary-blue);
   color: var(--color-white); 
   */
   background-color: #00145c;
-  color: #fe3756
+  color: #fe3756;
+  border-radius: 8px;
 }
 
 .icon {
   margin-top: 12.5px;
+  display: inline;
 }
